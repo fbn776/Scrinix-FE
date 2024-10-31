@@ -8,20 +8,15 @@ import {StateSetter} from "@/lib/types";
 import {FileUploadButton} from "@/components/FileUploadButton";
 import {useNotifications} from "@toolpad/core";
 import apiInstance from "@/lib/api";
+import {SEMS_LIST} from "@/data/SEMS_LIST";
+import {TExam} from "@/app/main/coordinator/page";
 
-const SEMS_LIST: { label: string }[] = [
-    {label: "1st Semester"}, {label: "2nd Semester"}, {label: "3rd Semester"},
-    {label: "4th Semester"}, {label: "5th Semester"}, {label: "6th Semester"},
-    {label: "7th Semester"}, {label: "8th Semester"}
-];
-
-function CreateExamForm({setOpen}: { setOpen: StateSetter<boolean> }) {
+function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, setExam: StateSetter<TExam[]> }) {
     const [title, setTitle] = useState('');
-    const [scheme, setScheme] = useState<number | null>(null);
-    const [semester, setSemester] = useState<string[]>([]);
+    const [semesters, setSemesters] = useState<string[]>([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [errors, setErrors] = useState({title: false, scheme: false, startDate: false, endDate: false});
+    const [errors, setErrors] = useState({title: false, startDate: false, endDate: false, semesters: false});
     const [timeTable, setTimeTable] = useState<File | null>(null);
     const [seatingArrangement, setSeatingArrangement] = useState<File | null>(null);
     const notifications = useNotifications();
@@ -31,13 +26,14 @@ function CreateExamForm({setOpen}: { setOpen: StateSetter<boolean> }) {
         if (confirm) setOpen(false);
     };
 
-    const handleCreate = async () => {
+    const handleCreate = () => {
         const newErrors = {
             title: title.trim() === '',
-            scheme: scheme === null,
             startDate: startDate === '',
             endDate: endDate === '',
+            semesters: semesters.length === 0 || !semesters.some((val) => (/^S[0-8] - \d{4}$/.test(val)))
         };
+
         setErrors(newErrors);
 
         if (Object.values(newErrors).some(error => error)) {
@@ -48,12 +44,31 @@ function CreateExamForm({setOpen}: { setOpen: StateSetter<boolean> }) {
             return;
         }
 
-        console.log("Send")
-        await apiInstance.post("/hello");
-        console.log("Sent");
 
-        console.log("Create exam with data:", {title, scheme, semester, startDate, endDate, timeTable, seatingArrangement});
+        apiInstance.post("/coordinator/exam", {
+            clgID: 'KTE',
+            title,
+            startDate,
+            endDate,
+            semesters
+        }).then((res) => {
+            console.log(res.data);
+            notifications.show('Exam created successfully', {
+                severity: "success",
+                autoHideDuration: 3000,
+            });
+            setExam(prev => [...prev, res.data]);
+            setOpen(false);
+        }).catch((err: unknown) => {
+            console.error(err);
+            // TODO Better error handling
+            notifications.show('Cannot create exam, an error happened', {
+                severity: "error",
+                autoHideDuration: 3000,
+            });
+        });
     };
+
 
     return <form onSubmit={(e) => {
         e.preventDefault();
@@ -72,30 +87,23 @@ function CreateExamForm({setOpen}: { setOpen: StateSetter<boolean> }) {
             />
 
             <Autocomplete
-                options={[{label: 2014}, {label: 2019}, {label: 2024}]}
-                getOptionLabel={(option) => option.label.toString()}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Scheme"
-                        error={errors.scheme}
-                        helperText={errors.scheme ? "Scheme is required" : ""}
-                        required
-                    />
-                )}
-                value={scheme ? {label: scheme} : null}
-                onChange={(event, newValue) => setScheme(newValue?.label ?? null)}
-            />
-
-            <Autocomplete
                 multiple
-                options={SEMS_LIST}
-                renderInput={(params) => <TextField {...params} label="Semester" required/>}
-                value={semester.map(item => {
+                options={SEMS_LIST.filter((val) => !semesters.includes(val.label))}
+                renderInput={(params) =>
+                    <TextField {...params}
+                               label="Semester"
+                               error={errors.semesters}
+                               helperText={errors.semesters ? "Semesters is required" : ""}
+                               required
+                    />
+                }
+                value={semesters.map(item => {
                     return {label: item}
                 })}
 
-                onChange={(event, newValue) => setSemester(newValue.map(item => item.label))}
+                onChange={(event, newValue) => {
+                    setSemesters(newValue.map(item => item.label))
+                }}
             />
 
             <div className="flex items-center justify-between">
@@ -141,9 +149,10 @@ function CreateExamForm({setOpen}: { setOpen: StateSetter<boolean> }) {
 }
 
 
-export default function AlertDialog({open, setOpen}: {
+export default function CreateExamModal({open, setOpen, setExam}: {
     open: boolean,
-    setOpen: StateSetter<boolean>
+    setOpen: StateSetter<boolean>,
+    setExam: StateSetter<TExam[]>
 }) {
     const handleClose = () => {
         const confirm = window.confirm("Closing this dialog will discard all changes. Are you sure?");
@@ -158,8 +167,8 @@ export default function AlertDialog({open, setOpen}: {
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle>Create Exam</DialogTitle>
-            <DialogContent className="w-[400px] text-center">
-                <CreateExamForm setOpen={setOpen}/>
+            <DialogContent className="w-[500px] text-center">
+                <CreateExamForm setOpen={setOpen} setExam={setExam}/>
             </DialogContent>
         </Dialog>
     );
