@@ -1,0 +1,43 @@
+.faculty-admin-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.faculty-admin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    outline: 1px solid lightskyblue;
+    padding: 20px 20px 20px 20px;
+    width: 25%;
+    border-radius: 15px;
+}
+h1{
+    text-align: center;
+    font-size: 30px;
+    color: #009be5;
+}
+.faculty-admin-sec{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-width: 25%;
+}
+.faculty-select{
+    width: 100%;
+    max-width: 100%;
+}
+.faculty-select-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
