@@ -3,8 +3,7 @@ import "./globals.css";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import {Roboto} from 'next/font/google';
 import {ThemeProvider} from '@mui/material/styles';
-import theme from '../lib/theme';
-import MainLayout from "@/components/main-layout";
+import theme from "@/lib/theme";
 
 export const metadata: Metadata = {
     title: "Scrinix",
@@ -28,13 +27,10 @@ export default function RootLayout(props: Readonly<{ children: React.ReactNode; 
         <body className={roboto.variable}>
         <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
-                <MainLayout>
                     {children}
-                </MainLayout>
             </ThemeProvider>
         </AppRouterCacheProvider>
         </body>
         </html>
     )
-        ;
 }

@@ -10,10 +10,9 @@ export default function Home() {
         <ul className="pl-5">
             <li className='flex gap-2 items-center'>
                 Coordinator
-                <Button variant="contained" component={Link} href="/coordinator">
+                <Button variant="contained" component={Link} href="/main/coordinator">
                     Go to coordinator
                 </Button>
-
             </li>
         </ul>
     </main>
