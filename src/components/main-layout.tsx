@@ -35,8 +35,8 @@ export default function MainLayout(props: Readonly<{ children: React.ReactNode; 
                 <h1 className="text-3xl text-center my-5">SCRUTINIX</h1>
                 <BasicSimpleTreeView/>
             </nav>
-            <main className="flex flex-col flex-1 h-full">
-                <nav className="w-full h-[100px] bg-primary shadow flex items-center justify-between px-5 gap-10">
+            <main className="flex flex-col flex-1 h-full overflow-hidden">
+                <nav className="w-full h-[100px] min-h-[100px] bg-primary shadow flex items-center justify-between px-5 gap-10">
                     <h1 className='font-semibold text-3xl text-white capitalize'>{currentPageName ? currentPageName : "Home"}</h1>
                     <div className="flex gap-10">
                         <Tooltip title="Notifications" placement="bottom">
@@ -49,7 +49,7 @@ export default function MainLayout(props: Readonly<{ children: React.ReactNode; 
                         <AccountMenu/>
                     </div>
                 </nav>
-                <main className="size-full outline-red-400">
+                <main className="size-full outline-red-400 overflow-y-scroll">
                     {children}
                 </main>
             </main>
