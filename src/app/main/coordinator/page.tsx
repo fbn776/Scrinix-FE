@@ -7,17 +7,16 @@ import HistoryIcon from '@mui/icons-material/History';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import CreateExamModal from "@/components/CreateExamModal";
 import {useEffect, useState} from "react";
-import {NotificationsProvider} from "@toolpad/core";
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import LaunchIcon from '@mui/icons-material/Launch';
-import Link from "next/link";
 import apiInstance from "@/lib/api";
+import axios from "axios";
+import ExamQuickView from "@/components/ExamQuickView";
 
 function BasicSpeedDial({openCreateExamModal}: { openCreateExamModal: () => void }) {
     return (
         <SpeedDial
+
             ariaLabel="Quick actions"
-            sx={{position: 'absolute', bottom: 16, right: 16}}
+            sx={{position: 'fixed', bottom: 24, right: 24}}
             icon={<SpeedDialIcon/>}
         >
             <SpeedDialAction icon={<NoteAddIcon/>} tooltipTitle="Create exams" onClick={openCreateExamModal}/>
@@ -27,49 +26,60 @@ function BasicSpeedDial({openCreateExamModal}: { openCreateExamModal: () => void
     );
 }
 
-export type TExam = {
-    E_id: string;
-    ClgID: string;
+export type TExamQueryOut = {
+    e_id: string;
+    clgID: string;
     title: string;
-    startDate: string;
-    endDate: string;
-    semesters: string[];
+    start_date: string;
+    end_date: string;
+    sem_scheme: string;
 }
 
 export default function CoordinatorPage() {
     const [open, setOpen] = useState(false);
-    const [exams, setExams] = useState<TExam[]>([]);
+    const [exams, setExams] = useState<TExamQueryOut[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        apiInstance.get('/exams/all').then((res) => {
+        const source = axios.CancelToken.source();
+        apiInstance.get('/exams/all', {
+            cancelToken: source.token
+        }).then((res) => {
             setExams(res.data.data);
+            console.log("Data from GET: ", res.data.data);
             setIsLoading(false);
+        }).catch((err) => {
+            if (axios.isAxiosError(err)) {
+                console.log(err.response?.data);
+            }
+            if (axios.isCancel(err)) {
+                console.log('Request cancelled, error: ', err.message);
+            }
         }).finally(() => {
             setIsLoading(false);
         });
+
+        return () => {
+            source.cancel('Cancelled by rerender');
+        }
     }, []);
 
-    console.log(exams);
-
     return (
-        <NotificationsProvider>
-            <div>
+        <div className="bg-gray-200 relative p-0">
+            <div className="w-full h-full pb-[100px]">
                 {isLoading ?
                     <h1 className="text-center text-4xl opacity-30 mt-10">Loading...</h1>
                     : exams.length === 0 ?
                         <h1 className="text-center text-4xl opacity-30 mt-10">You have no exams :)</h1>
                         :
-                        exams.map((exam, i) => <Link href={`/main/exams/${exam.e_id}`} key={i}>
-                            <h1>{exam.title}</h1>
-                            <DateRangeIcon/> {exam.start_date} - {exam.end_date}
-                            <LaunchIcon/>
-                        </Link>)
+                        <div className="space-y-4 pt-4">
+                            {exams.map((exam, i) => <ExamQuickView exam={exam} key={i}/>)}
+                        </div>
                 }
-
-                <BasicSpeedDial openCreateExamModal={() => setOpen(true)}/>
-                <CreateExamModal open={open} setOpen={setOpen} setExam={setExams}/>
             </div>
-        </NotificationsProvider>
+
+            <BasicSpeedDial openCreateExamModal={() => setOpen(true)}/>
+            <CreateExamModal open={open} setOpen={setOpen} setExam={setExams}/>
+        </div>
     );
 }

@@ -9,9 +9,9 @@ import {FileUploadButton} from "@/components/FileUploadButton";
 import {useNotifications} from "@toolpad/core";
 import apiInstance from "@/lib/api";
 import {SEMS_LIST} from "@/data/SEMS_LIST";
-import {TExam} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/coordinator/page";
 
-function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, setExam: StateSetter<TExam[]> }) {
+function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, setExam: StateSetter<TExamQueryOut[]> }) {
     const [title, setTitle] = useState('');
     const [semesters, setSemesters] = useState<string[]>([]);
     const [startDate, setStartDate] = useState('');
@@ -45,19 +45,41 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
         }
 
 
+        console.log("Creating exam (POST) with data: ", {
+            clgID: 'KTE',
+            title,
+            startDate,
+            endDate,
+            sem_scheme: semesters,
+        });
         apiInstance.post("/coordinator/exam", {
             clgID: 'KTE',
             title,
             startDate,
             endDate,
-            semesters
+            sem_scheme: semesters,
         }).then((res) => {
-            console.log(res.data);
+            console.log("Data from post exam: ", res.data);
+
             notifications.show('Exam created successfully', {
                 severity: "success",
                 autoHideDuration: 3000,
             });
-            setExam(prev => [...prev, res.data]);
+
+            const sem_scheme = res.data.data.sem_scheme
+                .map(
+                    (item: string) => {
+                        const split = item.split('-');
+                        return `${split[0].trim().substring(1)} - ${split[1].trim()}`;
+                    }
+                ).join(' ');
+
+            const resultObj = {
+                ...res.data.data,
+                sem_scheme
+            };
+
+            setExam(prev => [...prev, resultObj]);
             setOpen(false);
         }).catch((err: unknown) => {
             console.error(err);
@@ -152,7 +174,7 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
 export default function CreateExamModal({open, setOpen, setExam}: {
     open: boolean,
     setOpen: StateSetter<boolean>,
-    setExam: StateSetter<TExam[]>
+    setExam: StateSetter<TExamQueryOut[]>
 }) {
     const handleClose = () => {
         const confirm = window.confirm("Closing this dialog will discard all changes. Are you sure?");
