@@ -12,10 +12,11 @@
     justify-content: center;
     align-items: center;
     gap: 40px;
-    outline: 1px solid lightskyblue;
     padding: 20px 20px 20px 20px;
     width: 25%;
     border-radius: 15px;
+    box-shadow: 10px 10px 30px lightgrey;
+    background-color: ghostwhite;
 }
 h1{
     text-align: center;
