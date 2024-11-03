@@ -1,5 +1,6 @@
 import apiInstance from "@/lib/api";
 import {redirect} from "next/navigation";
+import {ExamView} from "@/app/main/exam/[e_id]/ExamView";
 
 
 export default async function Page({params}: {
@@ -8,14 +9,19 @@ export default async function Page({params}: {
     const e_id = (await params).e_id;
 
     try {
-        const hasExam = await apiInstance.get(`/has-exam/${e_id}`);
+        const hasExam = await apiInstance.post(`exams/has-exam`, {
+            e_id,
+            clg_id: 'KTE' // TODO Get from cookie or something
+        });
         if (!hasExam.data.hasExam)
             redirect('/main/exam/error');
+
+        const exam = await apiInstance.get(`exams/exam?e_id=${e_id}&clg_id=${'KTE'}`);
+        return <ExamView data={exam.data.data[0]}/>
+
     } catch (e) {
         console.error(e);
-        redirect('/main/exam/error');
+        return redirect('/main/exam/error');
     }
 
-
-    return <div>My Post: {e_id}</div>
 }
