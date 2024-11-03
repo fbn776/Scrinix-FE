@@ -11,6 +11,7 @@ export default function facultyAdmin() {
         'faculty of Engineering, Trivandrum',
         'Govt Engineering faculty, Thrissur'
     ]);
+
     return <div className={'faculty-admin-body'}>
         <div className="faculty-admin">
             <h1>Faculty Login</h1>
