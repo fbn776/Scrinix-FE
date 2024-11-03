@@ -33,6 +33,7 @@ export type TExamQueryOut = {
     start_date: string;
     end_date: string;
     sem_scheme: string;
+    created_time: string
 }
 
 export default function CoordinatorPage() {
@@ -46,7 +47,6 @@ export default function CoordinatorPage() {
             cancelToken: source.token
         }).then((res) => {
             setExams(res.data.data);
-            console.log("Data from GET: ", res.data.data);
             setIsLoading(false);
         }).catch((err) => {
             if (axios.isAxiosError(err)) {

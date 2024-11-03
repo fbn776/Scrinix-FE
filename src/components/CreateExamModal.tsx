@@ -44,15 +44,6 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
             return;
         }
 
-
-        console.log("Creating exam (POST) with data: ", {
-            clgID: 'KTE',
-            title,
-            startDate,
-            endDate,
-            sem_scheme: semesters,
-        });
-
         apiInstance.post("/coordinator/exam", {
             clgID: 'KTE',
             title,
@@ -60,14 +51,11 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
             end_date: endDate,
             sem_scheme: semesters,
         }).then((res) => {
-            console.log("Data I got from POST: ", res.data);
 
             notifications.show('Exam created successfully', {
                 severity: "success",
                 autoHideDuration: 3000,
             });
-
-            console.log("Sem scheme I got: ", res.data.data.sem_scheme);
 
             const sem_scheme = res.data.data.sem_scheme
                 .map(
@@ -77,8 +65,6 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
                     }
                 ).join(' ');
 
-            console.log("Sem scheme I processed: ", sem_scheme);
-
             const resultObj = {
                 ...res.data.data,
                 sem_scheme
@@ -86,7 +72,7 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
 
             console.log("Result object: ", resultObj);
 
-            setExam(prev => [...prev, resultObj]);
+            setExam(prev => [resultObj, ...prev]);
             setOpen(false);
         }).catch((err: unknown) => {
             console.error(err);
