@@ -5,12 +5,6 @@ import {StateSetter} from "@/lib/types";
 import Dialog from "@mui/material/Dialog";
 import FacultyNameAutocomplete, {IFaculty} from "@/components/FacultySearch";
 
-function CreateExamForm({setOpen}: { setOpen: StateSetter<boolean> }) {
-
-
-}
-
-
 export default function FacultySearchPopup({open, setOpen, setSelectedFaculty}: {
     open: boolean,
     setOpen: StateSetter<boolean>,
