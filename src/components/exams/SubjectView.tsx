@@ -10,7 +10,7 @@ export function SubjectView(props: { item: { semester: number; scheme: number; n
     const [open, setOpen] = useState(false);
     const [selectFaculty, setSelectFaculty] = useState<IFaculty | null>(null);
 
-    return <div className="bg-gray-100 p-2 rounded-md mt-2 flex justify-between items-center">
+    return <div className="bg-white p-4 rounded-md flex justify-between items-center">
         <div>
             <h1 className="text-lg flex items-center gap-2">{props.item.name}</h1>
             <p className="text-gray-500 mb-3">{props.item.course_id}</p>

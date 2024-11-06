@@ -49,7 +49,7 @@ export default function MainLayout(props: Readonly<{ children: React.ReactNode; 
                         <AccountMenu/>
                     </div>
                 </nav>
-                <main className="size-full outline-red-400 overflow-y-scroll">
+                <main className="size-full outline-red-400 overflow-y-auto">
                     {children}
                 </main>
             </main>

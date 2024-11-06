@@ -1,6 +1,6 @@
 import apiInstance from "@/lib/api";
 import {redirect} from "next/navigation";
-import {ExamView} from "@/app/main/exam/[e_id]/ExamView";
+import ExamTabs from "@/components/exams/ExamTabs";
 
 
 export default async function Page({params}: {
@@ -17,11 +17,12 @@ export default async function Page({params}: {
             redirect('/main/exam/error');
 
         const exam = await apiInstance.get(`exams/exam?e_id=${e_id}&clg_id=${'KTE'}`);
-        return <ExamView data={exam.data.data[0]}/>
+        return <main className="relative w-full h-full">
+            <ExamTabs data={exam.data.data[0]}/>
+        </main>
 
     } catch (e) {
         console.error(e);
         return redirect('/main/exam/error');
     }
-
 }

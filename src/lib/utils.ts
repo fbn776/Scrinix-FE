@@ -43,3 +43,10 @@ export function timeAgo(timestamp: string) {
     const years = Math.floor(months / 12);
     return `${years} year${years > 1 ? 's' : ''} ago`;
 }
+
+export default function a11yProps(index: number) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
