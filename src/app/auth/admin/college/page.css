@@ -1,0 +1,44 @@
+.college-admin-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.college-admin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 20px 20px 20px 20px;
+    width: 500px;
+    border-radius: 15px;
+    box-shadow: 10px 10px 30px lightgrey;
+    background-color: ghostwhite;
+}
+h1{
+    text-align: center;
+    font-size: 30px;
+    color: #1565c0;
+}
+.college-admin-sec{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-width: 300px;
+}
+.college-select{
+    width: 100%;
+    max-width: 100%;
+}
+.college-select-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
