@@ -23,7 +23,7 @@ function fetchCollegeData(setLoading: StateSetter<boolean>, setCollegeList: Stat
     })
 }
 
-export default function CreatForm({setAdmins}: { setAdmins: StateSetter<ICollegeAdmin[]> }) {
+export default function CreateForm({setAdmins}: { setAdmins: StateSetter<ICollegeAdmin[]> }) {
     const [loading, setLoading] = useState(true);
     const notifications = useNotifications();
     const [collegeList, setCollegeList] = useState<TCollegeAutoComp[]>([]);

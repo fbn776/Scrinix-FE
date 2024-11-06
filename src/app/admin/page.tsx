@@ -8,6 +8,7 @@ import CreateCollegeTab from "@/components/admin-tabs/CreateCollegeTab";
 import {NotificationsProvider} from "@toolpad/core";
 import EditCollegeTab from "@/components/admin-tabs/EditCollegeTab";
 import CreateCollegeAdminTab from "@/components/admin-tabs/create-admin/CreateCollegeAdminTab";
+import CreateCourseTab from "@/components/admin-tabs/create-course/CreateCourseTab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -75,6 +76,7 @@ export default function MainAdminPage() {
                         <CreateCollegeAdminTab/>
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={3}>
+                        <CreateCourseTab/>
 
                     </CustomTabPanel>
                 </Box>
