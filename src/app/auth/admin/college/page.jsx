@@ -5,8 +5,8 @@ import {Autocomplete, Button, TextField} from "@mui/material";
 import {useState} from "react";
 
 
-export default function facultyAdmin() {
-    let [facultyIds, setfacultyIds] = useState([
+export default function collegeAdmin() {
+    let [collegeIds, setcollegeIds] = useState([
         'KTE',
         'CET',
         'GEC'
@@ -14,10 +14,10 @@ export default function facultyAdmin() {
 
     const [noFIDError, setNoFIDError] = useState(false);
 
-    return <div className={'faculty-admin-body'}>
-        <div className="faculty-admin">
-            <h1>Faculty Login</h1>
-            <form className="faculty-admin-sec" onSubmit={(e) => {
+    return <div className={'college-admin-body'}>
+        <div className="college-admin">
+            <h1>College Login</h1>
+            <form className="college-admin-sec" onSubmit={(e) => {
                 e.preventDefault();
 
                 const formData = new FormData(e.target);
@@ -26,29 +26,29 @@ export default function facultyAdmin() {
             }}>
                 <div className="w-full flex flex-col gap-2">
                     <label htmlFor='clgID'>College ID</label>
-                    <Autocomplete className="faculty-select"
-                                  options={facultyIds}
+                    <Autocomplete className="college-select"
+                                  options={collegeIds}
                                   renderInput={(params) => (
                                       <TextField name='clgID' {...params} placeholder="Enter College ID" required
                                                  error={noFIDError}
-                                                 helperText={noFIDError && "Invalid FacultyId"}/>
+                                                 helperText={noFIDError && "Invalid collegeId"}/>
                                   )}
                     />
                 </div>
 
                 <div className="w-full flex flex-col gap-2">
-                    <label htmlFor='facutyID'>Faculty ID</label>
-                    <TextField name='facutyID' className="faculty-select" placeholder="Enter Faculty ID" required
+                    <label htmlFor='facutyID'>college ID</label>
+                    <TextField name='facutyID' className="college-select" placeholder="Enter college ID" required
                                variant="outlined"
                                error={noFIDError}
-                               helperText={noFIDError && "Invalid FacultyId"}
+                               helperText={noFIDError && "Invalid collegeId"}
                     />
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <label htmlFor='password'>Password</label>
-                    <TextField className="faculty-select" name='password' type='password' placeholder='password'
+                    <TextField className="college-select" name='password' type='password' placeholder='password'
                                error={noFIDError}
-                               helperText={noFIDError && "Invalid FacultyId"}/>
+                               helperText={noFIDError && "Invalid collegeId"}/>
                 </div>
                 <Button type="submit" variant="contained">LOGIN</Button>
             </form>
