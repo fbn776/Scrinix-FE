@@ -4,15 +4,16 @@ import {CircularProgress} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditCollegeDialog from "@/components/admins/InputPopUp";
+import EditCollegeDialog from "@/components/admin-tabs/InputPopUp";
 import {useNotifications} from "@toolpad/core";
+import axios from "axios";
 
 interface ICollege {
     id: string;
     name: string;
 }
 
-export type TEditOpen = {status: boolean, id: string | null}
+export type TEditOpen = { status: boolean, id: string | null }
 
 export default function EditCollegeTab() {
     const [colleges, setColleges] = useState<ICollege[]>([]);
@@ -44,6 +45,9 @@ export default function EditCollegeTab() {
                         <h3><span className="opacity-50 font-bold">#</span>{college.id}</h3>
                     </div>
                     <IconButton onClick={() => {
+                        const confirm = window.confirm('Are you sure you want to delete this college?');
+                        if (!confirm) return;
+
                         apiInstance.delete(`/admin/root/delete-college/${college.id}`).then(() => {
                             const updated = colleges.filter((c) => c.id !== college.id);
                             setColleges(updated);
@@ -52,7 +56,12 @@ export default function EditCollegeTab() {
                             });
                         }).catch((err) => {
                             console.error(err);
-                            notify.show('Cannot delete college', {
+                            let errMsg = err.message;
+                            if (axios.isAxiosError(err)) {
+                                errMsg = err.response?.data.message;
+                            }
+
+                            notify.show(errMsg, {
                                 severity: 'error'
                             });
                         });

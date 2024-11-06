@@ -2,6 +2,7 @@ import apiInstance from "@/lib/api";
 import Button from "@mui/material/Button";
 import {useState} from "react";
 import {useNotifications} from "@toolpad/core";
+import {TextField} from "@mui/material";
 
 export default function CreateCollegeTab() {
     const [loading, setLoading] = useState(false);
@@ -33,17 +34,14 @@ export default function CreateCollegeTab() {
             }).finally(() => {
                 setLoading(false);
             });
-        }}>
+        }} className='bg-white p-4 rounded-md'>
             <div className="mb-4 flex flex-col gap-2 ">
                 <label htmlFor="clgID">College ID<span className="text-red-500">*</span></label>
-                <input type="text" name="clgID" className="px-4 py-3 rounded-md border-2 border-gray-300"
-                       placeholder="Enter College ID"
-                       required
-                />
+                <TextField type="text" name="clgID" placeholder="Enter college ID" required/>
             </div>
             <div className="mb-4 flex flex-col gap-2">
                 <label htmlFor="clgName">College Name<span className="text-red-500">*</span></label>
-                <input type="text" name="clgName" className="px-4 py-3 rounded-md border-2 border-gray-300"
+                <TextField type="text" name="clgName"
                        placeholder="Enter College Name"
                        required
                 />

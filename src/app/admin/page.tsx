@@ -4,9 +4,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import {useState} from "react";
-import CreateCollegeTab from "@/components/admins/CreateCollegeTab";
+import CreateCollegeTab from "@/components/admin-tabs/CreateCollegeTab";
 import {NotificationsProvider} from "@toolpad/core";
-import EditCollegeTab from "@/components/admins/EditCollegeTab";
+import EditCollegeTab from "@/components/admin-tabs/EditCollegeTab";
+import CreateCollegeAdminTab from "@/components/admin-tabs/create-admin/CreateCollegeAdminTab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -48,18 +49,22 @@ export default function MainAdminPage() {
 
     return (
         <NotificationsProvider>
-            <div className="">
-                <h1 className="p-4 text-2xl">Admin Panel</h1>
-
-                <Box sx={{width: '100%'}}>
-                    <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                        <Tabs value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
-                            <Tab label="Create College" {...a11yProps(0)} />
-                            <Tab label="Edit College" {...a11yProps(1)} />
-                            <Tab label="Assign College Admin" {...a11yProps(2)} />
-                            <Tab label="Create Course" {...a11yProps(3)} />
-                        </Tabs>
-                    </Box>
+            <Box className="w-full flex flex-col overflow-hidden">
+                <Box sx={{
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    backgroundColor: 'white',
+                    boxShadow: '0px 0.1px 4px rgba(0, 0, 0, 0.4)',
+                }} className='fixed w-full z-30'>
+                    <h1 className="p-4 text-2xl bg-white">Admin Panel</h1>
+                    <Tabs value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab label="Create College" {...a11yProps(0)} />
+                        <Tab label="Edit College" {...a11yProps(1)} />
+                        <Tab label="College Admin" {...a11yProps(2)} />
+                        <Tab label="Create Course" {...a11yProps(3)} />
+                    </Tabs>
+                </Box>
+                <Box className="overflow-y-auto fixed h-[calc(100%-100px)] w-full top-[100px]">
                     <CustomTabPanel value={tabIndex} index={0}>
                         <CreateCollegeTab/>
                     </CustomTabPanel>
@@ -67,11 +72,13 @@ export default function MainAdminPage() {
                         <EditCollegeTab/>
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={2}>
-                        Item Three
+                        <CreateCollegeAdminTab/>
+                    </CustomTabPanel>
+                    <CustomTabPanel value={tabIndex} index={3}>
+
                     </CustomTabPanel>
                 </Box>
-            </div>
-
+            </Box>
         </NotificationsProvider>
     );
 }

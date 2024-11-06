@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {TEditOpen} from "@/components/admins/EditCollegeTab";
+import {TEditOpen} from "@/components/admin-tabs/EditCollegeTab";
 import apiInstance from "@/lib/api";
 import {useNotifications} from "@toolpad/core";
 
