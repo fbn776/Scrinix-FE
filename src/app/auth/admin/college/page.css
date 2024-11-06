@@ -13,7 +13,7 @@
     align-items: center;
     gap: 40px;
     padding: 20px 20px 20px 20px;
-    width: 25%;
+    width: 500px;
     border-radius: 15px;
     box-shadow: 10px 10px 30px lightgrey;
     background-color: ghostwhite;
@@ -21,7 +21,7 @@
 h1{
     text-align: center;
     font-size: 30px;
-    color: #009be5;
+    color: #1565c0;
 }
 .college-admin-sec{
     display: flex;
@@ -29,7 +29,7 @@ h1{
     justify-content: center;
     align-items: center;
     gap: 20px;
-    min-width: 25%;
+    min-width: 300px;
 }
 .college-select{
     width: 100%;
