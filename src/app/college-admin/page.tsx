@@ -12,6 +12,7 @@ import a11yProps from "@/lib/utils";
 import CustomTabPanel from "@/components/CustomTabPanel";
 import CreateFacultyTab from "@/components/admin-tabs/CreateFacultyTab";
 import CreateCoordinatorTab from "@/components/admin-tabs/Create CoordinatorTab";
+import EditFacultyTab from "@/components/admin-tabs/EditFacultyTab";
 
 export default function ClgAdminPage() {
     const [tabIndex, setTabIndex] = useState(0);
@@ -42,7 +43,7 @@ export default function ClgAdminPage() {
                         <CreateFacultyTab/>
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={1}>
-                        <EditCollegeTab/>
+                        <EditFacultyTab/>
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={2}>
                         <CreateCoordinatorTab/>

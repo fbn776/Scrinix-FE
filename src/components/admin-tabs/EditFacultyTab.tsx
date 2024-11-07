@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditCollegeDialog from "@/components/admin-tabs/EditCollegeDialog";
 import {useNotifications} from "@toolpad/core";
 import axios from "axios";
+import EditFacultyDialog from "@/components/admin-tabs/EditFacultyDaialog";
 
 interface ICollege {
     id: string;
@@ -15,7 +16,7 @@ interface ICollege {
 
 export type TEditOpen = { status: boolean, id: string | null }
 
-export default function EditCollegeTab() {
+export default function EditFacultyTab() {
     const [colleges, setColleges] = useState<ICollege[]>([]);
     const [loading, setLoading] = useState(false);
     const [editOpen, setEditOpen] = useState<TEditOpen>({status: false, id: null});
@@ -23,8 +24,8 @@ export default function EditCollegeTab() {
 
     useEffect(() => {
         setColleges([{
-            name: 'Rajiv GandhiInstitute of Technology',
-            id: 'KTE'
+            name: 'John Smith',
+            id: 'F001'
         }])
         // setLoading(true);
         // apiInstance.get('/admin/root/colleges').then((res) => {
@@ -73,7 +74,7 @@ export default function EditCollegeTab() {
                 </div>
             })}
 
-            <EditCollegeDialog onUpdate={(id: string, name: string) => {
+            <EditFacultyDialog onUpdate={(id: string, name: string) => {
                 const newColleges = colleges.map((college) => {
                     if (college.id === id) {
                         return {...college, name: name};
