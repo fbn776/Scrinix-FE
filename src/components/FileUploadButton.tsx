@@ -4,17 +4,20 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import {styled} from "@mui/material/styles";
 import DoneIcon from '@mui/icons-material/Done';
 import {StateSetter} from "@/lib/types";
+import {useNotifications} from "@toolpad/core";
 
 
 const VisuallyHiddenInput = styled('input')({
     display: 'none',
 });
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
 export function FileUploadButton({file, setFile}: { file: File | null, setFile: StateSetter<File | null> }) {
+    const notfiy = useNotifications();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        console.log(file);
         if (file) {
             setFile(file);
         }
@@ -26,7 +29,20 @@ export function FileUploadButton({file, setFile}: { file: File | null, setFile: 
                 <VisuallyHiddenInput
                     id="file-upload-button"
                     type="file"
-                    onChange={handleFileChange}
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            if (file.size > MAX_FILE_SIZE) {
+                                notfiy.show("File too large ( < 5MB )", {
+                                    severity: "error"
+                                })
+                                return;
+                            }
+                            setFile(file);
+                        }
+                        handleFileChange(e);
+                    }}
+                    accept=".pdf"
                 />
                 <Button
                     component="span"

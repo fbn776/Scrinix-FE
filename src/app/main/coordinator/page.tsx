@@ -33,7 +33,9 @@ export type TExamQueryOut = {
     start_date: string;
     end_date: string;
     sem_scheme: string;
-    created_time: string
+    created_time: string;
+    seating_arrangement: number | null;
+    time_table: number | null;
 }
 
 export default function CoordinatorPage() {

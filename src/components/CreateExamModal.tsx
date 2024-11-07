@@ -44,12 +44,25 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
             return;
         }
 
-        apiInstance.post("/coordinator/exam", {
-            clgID: 'KTE',
-            title,
-            start_date: startDate,
-            end_date: endDate,
-            sem_scheme: semesters,
+        const formData = new FormData();
+        formData.append('clgID', 'KTE');
+        formData.append('title', title);
+        formData.append('start_date', startDate);
+        formData.append('end_date', endDate);
+        /**
+         * Since we are sending the data to backend as a FormData, we can't send it directly as an array.
+         * So joining it using # and then the backend splits it back to an array
+         */
+        formData.append('sem_scheme', semesters.join('#'));
+        if (timeTable) formData.append('timetable', timeTable);
+        if (seatingArrangement) formData.append('seating', seatingArrangement);
+
+        console.log(formData.get('clgID'));
+
+        apiInstance.post("/coordinator/exam", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         }).then((res) => {
 
             notifications.show('Exam created successfully', {
@@ -83,7 +96,6 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
             });
         });
     };
-
 
     return <form onSubmit={(e) => {
         e.preventDefault();
