@@ -5,7 +5,6 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import React, {useEffect, useState} from "react";
 import {NotificationsProvider} from "@toolpad/core";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
 import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -17,6 +16,8 @@ import apiInstance from "@/lib/api";
 import {useRouter} from "next/navigation";
 import CustomTabPanel from "@/components/CustomTabPanel";
 import AvailableSubjectsTab from "@/components/exams/tabs/AvailableSubjectsTab";
+import {TExamQueryOut} from "@/app/main/coordinator/page";
+import QuestionPaperTab from "@/components/exams/tabs/qp/QuestionPaperTab";
 
 
 export interface ISubject {
@@ -27,14 +28,18 @@ export interface ISubject {
     semester: number;
 }
 
+
 export default function ExamTabs({data}: { data: TExamQueryOut }) {
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex, setTabIndex] = useState(1); // TODO Change this back to 0
     const [subjects, setSubjects] = useState<ISubject[]>([]);
+    const [qpArr, setQpArr] = useState([]);
+
+
     const router = useRouter();
 
     useEffect(() => {
-        apiInstance.post('/exams/get-subjects', {
-            e_id: data.e_id,
+        apiInstance.post('/exams/get-available-subjects', {
+            e_id: data!.e_id,
             clg_id: 'KTE'
         }).then((res) => {
             setSubjects(res.data.data);
@@ -42,11 +47,14 @@ export default function ExamTabs({data}: { data: TExamQueryOut }) {
             console.error(e);
             return router.push('/main/exam/error');
         })
-    }, [data.e_id, router]);
+    }, [data, router]);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChange = (_: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
     };
+
+    if(!data)
+        return null;
 
     return (
         <NotificationsProvider>
@@ -90,19 +98,20 @@ export default function ExamTabs({data}: { data: TExamQueryOut }) {
                         </div>
                     </div>
 
-                    <Tabs value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Available Subjects" {...a11yProps(0)} />
-                        <Tab label="Question Papers" {...a11yProps(1)} />
-                        <Tab label="Scrutinize" {...a11yProps(2)} />
+                    <Tabs className="mt-1" value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab label={`Available Subjects (${subjects.length})`} {...a11yProps(0)} />
+                        <Tab label={`Question Papers`} {...a11yProps(1)} />
+                        <Tab label={`Scrutinize`} {...a11yProps(2)} />
                     </Tabs>
                 </Box>
                 <Box className="flex-1 overflow-auto w-full">
                     <CustomTabPanel value={tabIndex} index={0} padding="0px">
-                        <AvailableSubjectsTab subject_arr={subjects} />
+                        <AvailableSubjectsTab data={data} subject={subjects} setSubjects={setSubjects}/>
                     </CustomTabPanel>
-                    <CustomTabPanel value={tabIndex} index={1}>
+                    <CustomTabPanel value={tabIndex} index={1} padding='0px'>
+                        <QuestionPaperTab data={data}/>
                     </CustomTabPanel>
-                    <CustomTabPanel value={tabIndex} index={2}>
+                    <CustomTabPanel value={tabIndex} index={2} padding='0px'>
                     </CustomTabPanel>
                 </Box>
             </Box>

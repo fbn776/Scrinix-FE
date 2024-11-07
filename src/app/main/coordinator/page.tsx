@@ -28,7 +28,7 @@ function BasicSpeedDial({openCreateExamModal}: { openCreateExamModal: () => void
 
 export type TExamQueryOut = {
     e_id: string;
-    clgID: string;
+    clgid: string;
     title: string;
     start_date: string;
     end_date: string;

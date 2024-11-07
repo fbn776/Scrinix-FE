@@ -2,11 +2,18 @@
 
 import {Chip} from "@mui/material";
 import Button from "@mui/material/Button";
-import FacultySearchPopup from "@/components/FacultySearchPopup";
+import AssignFacultyDialog from "@/components/AssignFacultyDialog";
 import {useState} from "react";
 import {IFaculty} from "@/components/FacultySearch";
+import {ISubject} from "@/components/exams/ExamTabs";
+import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {StateSetter} from "@/lib/types";
 
-export function SubjectView(props: { item: { semester: number; scheme: number; name: string; course_id: string } }) {
+export function SubjectView(props: {
+    data: TExamQueryOut,
+    item: ISubject,
+    setSubjects: StateSetter<ISubject[]>
+}) {
     const [open, setOpen] = useState(false);
     const [selectFaculty, setSelectFaculty] = useState<IFaculty | null>(null);
 
@@ -16,12 +23,15 @@ export function SubjectView(props: { item: { semester: number; scheme: number; n
             <p className="text-gray-500 mb-3">{props.item.course_id}</p>
             <Chip label={`S${props.item.semester} - ${props.item.scheme}`}/>
         </div>
-        <div>
-            {selectFaculty ? <Chip label={selectFaculty.name} onDelete={() => setSelectFaculty(null)}/> :
-                <Button variant="text" onClick={() => setOpen(true)}>Assign Faculty</Button>
-            }
-        </div>
-
-        <FacultySearchPopup open={open} setOpen={setOpen} setSelectedFaculty={setSelectFaculty}/>
+        <Button variant="text" onClick={() => setOpen(true)}>Assign Faculty</Button>
+        <AssignFacultyDialog
+            data={props.data}
+            subject={props.item}
+            open={open}
+            setOpen={setOpen}
+            selectedFaculty={selectFaculty}
+            setSelectedFaculty={setSelectFaculty}
+            setSubjects={props.setSubjects}
+        />
     </div>;
 }
