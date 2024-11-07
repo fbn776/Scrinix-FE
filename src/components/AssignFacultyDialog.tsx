@@ -52,7 +52,7 @@ export default function AssignFacultyDialog(
                         return;
 
                     if (!selectedFaculty) {
-                        notify.show('Please select a faculty', {severity: 'error'});
+                        notify.show('Please select a faculty', {severity: 'error', autoHideDuration: 1000});
                         return;
                     }
 
@@ -72,7 +72,7 @@ export default function AssignFacultyDialog(
                             return e.course_id !== subject.course_id;
                         }));
 
-                        notify.show('Faculty assigned successfully', {severity: 'success'});
+                        notify.show('Faculty assigned successfully', {severity: 'success', autoHideDuration: 1000});
                         console.log(res.data);
                     }).catch(e => {
                         console.error(e);

@@ -34,7 +34,7 @@ export default function CreateForm({setCourse}:  {setCourse: StateSetter<ICourse
         setLenError(false);
 
         if (course_id.length > 10) {
-            notify.show('Course ID should be less than 10 characters', {severity: 'error'});
+            notify.show('Course ID should be less than 10 characters', {severity: 'error', autoHideDuration: 1000});
             setLenError(true);
             setLoading(false);
             return;
@@ -47,16 +47,16 @@ export default function CreateForm({setCourse}:  {setCourse: StateSetter<ICourse
             setCourse((prev) => {
                 return [{semester, scheme, name, course_id, created_at: new Date().toISOString()}, ...prev];
             });
-            notify.show('Course created successfully', {severity: 'success'});
+            notify.show('Course created successfully', {severity: 'success', autoHideDuration: 1000});
         }).catch((e) => {
             if (axios.isAxiosError(e)) {
                 if (e.response?.status === 409) {
-                    notify.show('Course already exists', {severity: 'error'});
+                    notify.show('Course already exists', {severity: 'error', autoHideDuration: 1000});
                     setDupeError(true);
                     return;
                 }
             }
-            notify.show('Unable to add course', {severity: 'error'});
+            notify.show('Unable to add course', {severity: 'error', autoHideDuration: 1000});
         }).finally(() => {
             setLoading(false);
         })

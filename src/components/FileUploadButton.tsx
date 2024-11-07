@@ -34,7 +34,7 @@ export function FileUploadButton({file, setFile}: { file: File | null, setFile: 
                         if (file) {
                             if (file.size > MAX_FILE_SIZE) {
                                 notfiy.show("File too large ( < 5MB )", {
-                                    severity: "error"
+                                    severity: "error", autoHideDuration: 1000
                                 })
                                 return;
                             }

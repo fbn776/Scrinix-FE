@@ -39,7 +39,7 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
         if (Object.values(newErrors).some(error => error)) {
             notifications.show('Fill in the necessary fields', {
                 severity: "error",
-                autoHideDuration: 3000,
+                autoHideDuration: 1000,
             });
             return;
         }
@@ -67,7 +67,7 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
 
             notifications.show('Exam created successfully', {
                 severity: "success",
-                autoHideDuration: 3000,
+                autoHideDuration: 1000,
             });
 
             const sem_scheme = res.data.data.sem_scheme
@@ -92,7 +92,7 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
             // TODO Better error handling
             notifications.show('Cannot create exam, an error happened', {
                 severity: "error",
-                autoHideDuration: 3000,
+                autoHideDuration: 1000,
             });
         });
     };

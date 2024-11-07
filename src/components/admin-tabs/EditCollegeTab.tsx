@@ -52,7 +52,7 @@ export default function EditCollegeTab() {
                             const updated = colleges.filter((c) => c.id !== college.id);
                             setColleges(updated);
                             notify.show('College deleted successfully', {
-                                severity: 'success'
+                                severity: 'success', autoHideDuration: 1000
                             });
                         }).catch((err) => {
                             console.error(err);
@@ -62,7 +62,7 @@ export default function EditCollegeTab() {
                             }
 
                             notify.show(errMsg, {
-                                severity: 'error'
+                                severity: 'error', autoHideDuration: 1000
                             });
                         });
                     }}><DeleteIcon sx={{color: "rgb(240, 0, 0)"}}/></IconButton>

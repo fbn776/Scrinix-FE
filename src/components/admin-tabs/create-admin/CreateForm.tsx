@@ -52,7 +52,7 @@ export default function CreateForm({setAdmins}: { setAdmins: StateSetter<IColleg
 
                   if (password !== confirmPassword) {
                       notifications.show('Password and retyped passwords are not same', {
-                          severity: 'error'
+                          severity: 'error', autoHideDuration: 1000
                       });
                       setNotSamePasswordError(true);
                       return;
@@ -69,7 +69,7 @@ export default function CreateForm({setAdmins}: { setAdmins: StateSetter<IColleg
                           return [result, ...prev];
                       });
                       notifications.show(`${userName} successfully created`, {
-                          severity: "success"
+                          severity: "success", autoHideDuration: 1000
                       })
                   }).catch(e => {
                       console.log(e);
@@ -83,7 +83,7 @@ export default function CreateForm({setAdmins}: { setAdmins: StateSetter<IColleg
                               message = 'Cannot create user, try again';
                       }
                       notifications.show(message, {
-                          severity: "error"
+                          severity: "error", autoHideDuration: 1000
                       });
                   }).finally(() => {
                       setLoading(false);

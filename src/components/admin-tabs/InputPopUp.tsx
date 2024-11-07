@@ -36,14 +36,14 @@ export default function EditCollegeDialog({editOpen, handleClose, onUpdate}: {
                         console.log(res.data);
                         notify.show('College name updated successfully', {
                             severity: "success",
-                            autoHideDuration: 3000,
+                            autoHideDuration: 1000,
                         });
                         onUpdate(editOpen.id!, name as string);
                     }).catch((err) => {
                         console.error(err);
                         notify.show('Cannot update college name', {
                             severity: "error",
-                            autoHideDuration: 3000,
+                            autoHideDuration: 1000,
                         });
                     }).finally(() => {
                         handleClose();

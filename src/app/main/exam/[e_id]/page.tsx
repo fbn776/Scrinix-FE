@@ -18,7 +18,7 @@ export default async function Page({params}: {
 
         const exam = await apiInstance.get(`exams/exam?e_id=${e_id}&clg_id=${'KTE'}`);
         return <main className="relative w-full h-full">
-            <ExamTabs data={exam.data.data[0]}/>
+            <ExamTabs paramData={exam.data.data[0]}/>
         </main>
 
     } catch (e) {
