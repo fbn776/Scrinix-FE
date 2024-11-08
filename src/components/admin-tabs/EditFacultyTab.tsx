@@ -50,13 +50,13 @@ export default function EditFacultyTab() {
                         <h3><span className="opacity-50 font-bold">#</span>{college.id}</h3>
                     </div>
                     <IconButton onClick={() => {
-                        const confirm = window.confirm('Are you sure you want to delete this college?');
+                        const confirm = window.confirm('Are you sure you want to delete this faculty?');
                         if (!confirm) return;
 
-                        apiInstance.delete(`/admin/root/delete-college/${college.id}`).then(() => {
+                        apiInstance.delete(`/admin/root/delete-faculty/${college.id}`).then(() => {
                             const updated = colleges.filter((c) => c.id !== college.id);
                             setColleges(updated);
-                            notify.show('College deleted successfully', {
+                            notify.show('Faculty deleted successfully', {
                                 severity: 'success'
                             });
                         }).catch((err) => {
