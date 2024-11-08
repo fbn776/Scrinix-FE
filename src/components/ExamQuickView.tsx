@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {Chip, Typography} from '@mui/material';
 import {Event} from '@mui/icons-material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {timeAgo} from "@/lib/utils";
 import Button from "@mui/material/Button";
 import downloadFile from "@/lib/downloadFile";
@@ -14,7 +14,7 @@ interface ExamCardProps {
 
 export default function ExamQuickView({exam}: ExamCardProps) {
     return (
-        <Link href={`/main/exam/${exam.e_id}`} style={{textDecoration: 'none'}}
+        <Link href={`/main/${exam.clgid}/exam/${exam.e_id}`} style={{textDecoration: 'none'}}
               className="bg-white shadow rounded-md flex mx-4 p-4 items-center justify-between">
             <div>
                 <h1 className="text-2xl">{exam.title}</h1>

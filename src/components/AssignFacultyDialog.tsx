@@ -7,7 +7,7 @@ import FacultyNameAutocomplete, {IFaculty} from "@/components/FacultySearch";
 import {TextField} from "@mui/material";
 import apiInstance from "@/lib/api";
 import {useNotifications} from "@toolpad/core";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {ISubject} from "@/components/exams/ExamTabs";
 
 export default function AssignFacultyDialog(

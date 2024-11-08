@@ -1,4 +1,4 @@
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {useEffect, useState} from "react";
 import {CircularProgress} from "@mui/material";
 import apiInstance from "@/lib/api";
@@ -52,7 +52,7 @@ export default function QuestionPaperTab({data}: {
         {isLoading ?
             <h1 className="text-center p-5"><CircularProgress/></h1> :
             qpArr.length === 0 ?
-                <h1 className="text-2xl pt-5 text-center opacity-50">No question paper assigned :(</h1> :
+                <h1 className="text-2xl pt-20 text-center opacity-50">No question paper assigned :(</h1> :
                 <div className="space-y-3 mx-4 my-4">
                     {qpArr.map((item: IQuestionPaper, i: number) => {
                         return <QpUnitView key={i} data={item}/>

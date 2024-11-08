@@ -6,7 +6,7 @@ import AssignFacultyDialog from "@/components/AssignFacultyDialog";
 import {useState} from "react";
 import {IFaculty} from "@/components/FacultySearch";
 import {ISubject} from "@/components/exams/ExamTabs";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {StateSetter} from "@/lib/types";
 
 export function SubjectView(props: {

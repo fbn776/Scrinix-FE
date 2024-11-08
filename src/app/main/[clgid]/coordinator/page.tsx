@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 import apiInstance from "@/lib/api";
 import axios from "axios";
 import ExamQuickView from "@/components/ExamQuickView";
+import {useParams} from "next/navigation";
 
 function BasicSpeedDial({openCreateExamModal}: { openCreateExamModal: () => void }) {
     return (
@@ -39,13 +40,17 @@ export type TExamQueryOut = {
 }
 
 export default function CoordinatorPage() {
+    const params = useParams();
+    const clgid: string | string[] = params.clgid;
+
     const [open, setOpen] = useState(false);
     const [exams, setExams] = useState<TExamQueryOut[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
+
     useEffect(() => {
         const source = axios.CancelToken.source();
-        apiInstance.get('/exams/all', {
+        apiInstance.get(`/exams/all/${clgid}`, {
             cancelToken: source.token
         }).then((res) => {
             setExams(res.data.data);

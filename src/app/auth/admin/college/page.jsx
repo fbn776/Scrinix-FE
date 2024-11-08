@@ -5,14 +5,10 @@ import {Autocomplete, Button, TextField} from "@mui/material";
 import {useState} from "react";
 
 
-export default function collegeAdmin() {
-    let [collegeIds, setcollegeIds] = useState([
-        'KTE',
-        'CET',
-        'GEC'
-    ]);
-
+export default function CollegeAdmin() {
     const [noFIDError, setNoFIDError] = useState(false);
+    const collegeIds = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'];
+
 
     return <div className={'college-admin-body'}>
         <div className="college-admin">

@@ -14,13 +14,13 @@ import DialogContent from "@mui/material/DialogContent";
 import {FileUploadButton} from "@/components/FileUploadButton";
 import Button from "@mui/material/Button";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import {IFacultyQPQueryOut} from "@/components/faculty/tabs/qp/QpTab";
 
-type TOpen = "seating" | "time" | null;
 
 function FileUploadForm({open, setOpen, data, setLoading}: {
-    open: TOpen,
-    setOpen: StateSetter<TOpen>,
-    data: TExamQueryOut,
+    open: boolean,
+    setOpen: StateSetter<boolean>,
+    data: IFacultyQPQueryOut,
     setLoading: StateSetter<boolean>
 }) {
     const [file, setFile] = useState<File | null>(null);
@@ -28,17 +28,17 @@ function FileUploadForm({open, setOpen, data, setLoading}: {
 
     const handleClose = () => {
         const confirm = window.confirm("Closing this dialog will discard all changes. Are you sure?");
-        if (confirm) setOpen(null);
+        if (confirm) setOpen(false);
     };
 
     return (
         <Dialog
-            open={open !== null}
+            open={open}
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle>Upload {open === 'seating' ? 'Seating Arrangement' : 'Time Table'}</DialogTitle>
+            <DialogTitle>Upload Question Paper</DialogTitle>
             <DialogContent className="w-[500px] text-center">
                 <form className="text-left" onSubmit={(e) => {
                     e.preventDefault();
@@ -46,14 +46,16 @@ function FileUploadForm({open, setOpen, data, setLoading}: {
 
                     const formData = new FormData();
                     formData.append('file', file);
-                    formData.append('e_id', data.e_id);
                     formData.append('clgid', data.clgid);
+                    formData.append('e_id', data.e_id);
+                    formData.append('scheme',data.scheme);
+                    formData.append('course_id',data.course_id);
 
-                    apiInstance.post(`/exams/upload/${open === 'time' ? 'timetable' : 'seating'}`, formData).then(() => {
+                    apiInstance.post(`/exam/upload-qp`, formData).then(() => {
                         notify.show('Upload successful', {
                             severity: "success", autoHideDuration: 1000
                         });
-                        setOpen(null);
+                        setOpen(false);
                     }).catch(e => {
                         console.error(e);
                         notify.show('Upload failed', {
@@ -65,7 +67,7 @@ function FileUploadForm({open, setOpen, data, setLoading}: {
                 }}>
                     <div className="flex justify-between items-center mt-5 mb-10">
                         <label>
-                            Upload {open === 'seating' ? 'Seating Arrangement' : 'Time Table'}
+                            Upload Question Paper
                         </label>
                         <FileUploadButton file={file} setFile={setFile}/>
                     </div>
@@ -76,10 +78,10 @@ function FileUploadForm({open, setOpen, data, setLoading}: {
     );
 }
 
-export default function ExamUploadTab({data, setData}: { data: TExamQueryOut, setData: StateSetter<TExamQueryOut> }) {
+export default function SubmitQP({data, setData}: { data: TExamQueryOut, setData: StateSetter<TExamQueryOut> }) {
     const [loading, setLoading] = useState(false);
     const notify = useNotifications();
-    const [open, setOpen] = useState<"seating" | "time" | null>(null);
+    const [open, setOpen] = useState(false);
 
     return (
         <div className="bg-white m-4 p-4 rounded-md relative overflow-hidden">

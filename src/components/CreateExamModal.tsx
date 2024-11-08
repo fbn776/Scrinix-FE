@@ -9,7 +9,7 @@ import {FileUploadButton} from "@/components/FileUploadButton";
 import {useNotifications} from "@toolpad/core";
 import apiInstance from "@/lib/api";
 import {SEMS_LIST} from "@/data/SEMS_LIST";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 
 function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, setExam: StateSetter<TExamQueryOut[]> }) {
     const [title, setTitle] = useState('');

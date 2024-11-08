@@ -16,7 +16,7 @@ import apiInstance from "@/lib/api";
 import {useRouter} from "next/navigation";
 import CustomTabPanel from "@/components/CustomTabPanel";
 import AvailableSubjectsTab from "@/components/exams/tabs/AvailableSubjectsTab";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import QuestionPaperTab from "@/components/exams/tabs/qp/QuestionPaperTab";
 import ExamUploadTab from "@/components/exams/tabs/ExamUploadTab";
 
@@ -32,7 +32,7 @@ export interface ISubject {
 
 
 export default function ExamTabs({paramData}: { paramData: TExamQueryOut }) {
-    const [tabIndex, setTabIndex] = useState(3); // TODO Change this back to 0
+    const [tabIndex, setTabIndex] = useState(0);
     const [subjects, setSubjects] = useState<ISubject[]>([]);
     const [data, setData] = useState<TExamQueryOut>(paramData);
 
@@ -40,8 +40,8 @@ export default function ExamTabs({paramData}: { paramData: TExamQueryOut }) {
 
     useEffect(() => {
         apiInstance.post('/exams/get-available-subjects', {
-            e_id: data!.e_id,
-            clg_id: 'KTE'
+            e_id: data.e_id,
+            clg_id: data.clgid
         }).then((res) => {
             setSubjects(res.data.data);
         }).catch((e) => {
@@ -68,7 +68,7 @@ export default function ExamTabs({paramData}: { paramData: TExamQueryOut }) {
                 }} className='flex-none w-full z-30'>
                     <div className="bg-white mt-3 ml-3 rounded-md">
                             <h1 className='text-2xl flex items-center'>
-                                <Link href='/main/coordinator'>
+                                <Link href={`/main/${data.clgid}/coordinator`}>
                                     <IconButton className=''>
                                         <ArrowBackIosIcon sx={{
                                             fontSize: '20px'

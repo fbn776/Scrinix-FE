@@ -1,7 +1,7 @@
 import {SubjectView} from "@/components/exams/SubjectView";
 import React from "react";
 import {ISubject} from "@/components/exams/ExamTabs";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {StateSetter} from "@/lib/types";
 
 

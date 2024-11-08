@@ -1,4 +1,8 @@
-export default function ClgAdminPage() {
+export default async function ClgAdminPage({params}: {params: Promise<{ clgid: string }>}) {
+    const clgid = (await params).clgid;
+
+    console.log(clgid);
+
     return (
         <div className="p-4 rounded-md bg-white m-4">
             <h1 className="text-2xl">College Admin Page</h1>
