@@ -1,5 +1,5 @@
 import {IQuestionPaper} from "@/components/exams/tabs/qp/QuestionPaperTab";
-import {Chip} from "@mui/material";
+import {Chip, CircularProgress} from "@mui/material";
 import EmailIcon from '@mui/icons-material/Email';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import PhoneIcon from '@mui/icons-material/Phone'
@@ -8,6 +8,11 @@ import "./style.css"
 import {formatDateToDDMMYYYYHHMM, timeAgo} from "@/lib/utils";
 import Button from "@mui/material/Button";
 import downloadFile from "@/lib/downloadFile";
+import AssignFacultyDialog from "@/components/AssignFacultyDialog";
+import {useState} from "react";
+import {IFaculty} from "@/components/FacultySearch";
+import apiInstance from "@/lib/api";
+import {useNotifications} from "@toolpad/core";
 
 const getStatusColor = (status: IQuestionPaper["status"]) => {
     switch (status) {
@@ -27,8 +32,18 @@ const getStatusColor = (status: IQuestionPaper["status"]) => {
 }
 
 export default function QpUnitView({data}: { data: IQuestionPaper }) {
+    const [open, setOpen] = useState(false);
+    const [selectFaculty, setSelectFaculty] = useState<IFaculty | null>(null);
+    const notify = useNotifications();
+    const [loading, setLoading] = useState(false);
 
-    return <div className="w-full bg-white rounded-md p-4 flex justify-between">
+    return <div className="w-full bg-white rounded-md p-4 flex justify-between relative overflow-hidden">
+        {loading &&
+            <div className="absolute inset-0 size-full flex items-center justify-center bg-black bg-opacity-80 z-50">
+                <CircularProgress/>
+            </div>
+        }
+
         <div>
             <h1 className='text-2xl'>{data.course_name}</h1>
             <span>
@@ -72,12 +87,56 @@ export default function QpUnitView({data}: { data: IQuestionPaper }) {
 
             <div>
                 <div className="space-x-4">
-                    {data.status === 'submitted' && <Button variant='contained'>Scrutinize</Button>}
+                    {data.status === 'submitted' &&
+                        <Button variant='contained' onClick={() => {
+                            setOpen(true)
+                        }} disabled={loading}>
+                            Scrutinize
+                        </Button>
+                    }
                     {data.file_id &&
                         <Button onClick={() => downloadFile(data.file_id!)} variant="contained" color="primary"
-                                className="mt-3">Download</Button>}
+                                className="mt-3"
+                        >
+                            Download
+                        </Button>
+                    }
                 </div>
             </div>
         </div>
+
+        <AssignFacultyDialog
+            data={data}
+            open={open}
+            setOpen={setOpen}
+            setSelectedFaculty={setSelectFaculty}
+
+            onSubmit={(e) => {
+                setLoading(true);
+
+                console.log(selectFaculty);
+
+                const formData = new FormData(e.target as HTMLFormElement);
+                const dueDate = formData.get('due_date') as string;
+
+                apiInstance.post('/coordinator/scrutiny/assign-faculty', {
+                    f_id: selectFaculty?.f_id,
+                    clg_id: data.clgid,
+                    course_id: data.course_id,
+                    scheme: data.scheme,
+                    exam_id: data.e_id,
+                    due_date: new Date(dueDate).toISOString(),
+                }).then((res) => {
+                    console.log(res.data);
+                    notify.show('Faculty assigned successfully', {severity: 'success', autoHideDuration: 1000});
+                    setOpen(false);
+                }).catch(e => {
+                    console.error(e);
+                    notify.show('Error assigning faculty', {severity: 'error', autoHideDuration: 1000});
+                }).finally(() => {
+                    setLoading(false);
+                });
+            }}
+        />
     </div>
 }

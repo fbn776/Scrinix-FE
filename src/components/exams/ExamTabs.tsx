@@ -16,6 +16,7 @@ import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import QuestionPaperTab from "@/components/exams/tabs/qp/QuestionPaperTab";
 import ExamUploadTab from "@/components/exams/tabs/ExamUploadTab";
 import TabTemplate from "@/components/TabTemplate";
+import ScrutinizeView from "@/components/exams/ScrutinizeView";
 
 export interface ISubject {
     course_id: string;
@@ -60,7 +61,7 @@ export default function ExamTabs({paramData}: { paramData: TExamQueryOut }) {
             title: `Question Papers (${qpCount})`
         },
         {
-            tab: <Box/>,
+            tab: <ScrutinizeView/>,
             title: `Scrutinize`
         },
         {
