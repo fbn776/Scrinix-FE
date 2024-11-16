@@ -8,7 +8,7 @@ import EditCollegeDialog from "@/components/admin-tabs/InputPopUp";
 import {useNotifications} from "@toolpad/core";
 import axios from "axios";
 
-interface ICollege {
+export interface ICollege {
     id: string;
     name: string;
 }

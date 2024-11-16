@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {CircularProgress} from "@mui/material";
 import apiInstance from "@/lib/api";
 import QpUnitView from "@/components/exams/tabs/qp/QpUnitView";
+import {StateSetter} from "@/lib/types";
 
 /** Interface for Question Paper returned from POST `/exams/get-qp`*/
 export interface IQuestionPaper {
@@ -27,10 +28,11 @@ export interface IQuestionPaper {
 }
 
 export default function QuestionPaperTab({data}: {
-    data: TExamQueryOut
+    data: TExamQueryOut,
+    setCount: StateSetter<number>
 }) {
-    const [qpArr, setQpArr] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [qpArr, setQpArr] = useState<IQuestionPaper[]>([]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -38,7 +40,6 @@ export default function QuestionPaperTab({data}: {
             e_id: data.e_id,
             clgid: data.clgid
         }).then((res) => {
-            console.log(res.data.data);
             setQpArr(res.data.data);
         }).catch((e) => {
             console.error(e);

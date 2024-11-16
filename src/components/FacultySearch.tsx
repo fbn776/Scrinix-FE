@@ -11,8 +11,9 @@ export interface IFaculty {
     clg_id: string;
 }
 
-export default function FacultyNameAutocomplete({setSelectedFaculty}: {
-    setSelectedFaculty: StateSetter<IFaculty | null>
+export default function FacultyNameAutocomplete({setSelectedFaculty, clgid}: {
+    setSelectedFaculty: StateSetter<IFaculty | null>,
+    clgid: string
 }) {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<readonly IFaculty[]>([]);
@@ -23,14 +24,14 @@ export default function FacultyNameAutocomplete({setSelectedFaculty}: {
     useEffect(() => {
         setLoading(true);
         apiInstance.post('/staff/by-clg', {
-            clg_id: 'KTE'
+            clg_id: clgid
         }).then((res) => {
             setLoading(false);
             setOptions(res.data.data);
         }).catch((e) => {
             console.error(e);
         });
-    }, []);
+    }, [clgid]);
 
     const handleOpen = () => {
         setOpen(true);

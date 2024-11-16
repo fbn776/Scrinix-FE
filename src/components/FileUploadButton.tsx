@@ -13,9 +13,22 @@ const VisuallyHiddenInput = styled('input')({
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
-export function FileUploadButton({file, setFile}: { file: File | null, setFile: StateSetter<File | null> }) {
-    const notfiy = useNotifications();
 
+/**
+ * File upload button, that stores the uploaded file to a React state
+ * @param file - The file state
+ * @param setFile - The file state setter
+ * @param maxFileSize - The maximum file size in bytes (optional: By default 5MB)
+ * @param fileType - The file type to accept (optional: By default .pdf)
+ * @constructor
+ */
+export function FileUploadButton({file, setFile, maxFileSize = MAX_FILE_SIZE, fileType = '.pdf'}: {
+    file: File | null,
+    setFile: StateSetter<File | null>,
+    maxFileSize?: number,
+    fileType: ".pdf" | ".docx" | string
+}) {
+    const notify = useNotifications();
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -32,8 +45,8 @@ export function FileUploadButton({file, setFile}: { file: File | null, setFile: 
                     onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                            if (file.size > MAX_FILE_SIZE) {
-                                notfiy.show("File too large ( < 5MB )", {
+                            if (file.size > maxFileSize) {
+                                notify.show("File too large", {
                                     severity: "error", autoHideDuration: 1000
                                 })
                                 return;
@@ -42,7 +55,7 @@ export function FileUploadButton({file, setFile}: { file: File | null, setFile: 
                         }
                         handleFileChange(e);
                     }}
-                    accept=".pdf"
+                    accept={fileType}
                 />
                 <Button
                     component="span"

@@ -6,6 +6,8 @@ import PhoneIcon from '@mui/icons-material/Phone'
 import PersonIcon from '@mui/icons-material/Person'
 import "./style.css"
 import {formatDateToDDMMYYYYHHMM, timeAgo} from "@/lib/utils";
+import Button from "@mui/material/Button";
+import downloadFile from "@/lib/downloadFile";
 
 const getStatusColor = (status: IQuestionPaper["status"]) => {
     switch (status) {
@@ -25,6 +27,7 @@ const getStatusColor = (status: IQuestionPaper["status"]) => {
 }
 
 export default function QpUnitView({data}: { data: IQuestionPaper }) {
+
     return <div className="w-full bg-white rounded-md p-4 flex justify-between">
         <div>
             <h1 className='text-2xl'>{data.course_name}</h1>
@@ -63,7 +66,18 @@ export default function QpUnitView({data}: { data: IQuestionPaper }) {
                 )}
             </div>
         </div>
-        <span
-            className={`${getStatusColor(data.status)} rounded-full px-3 py-1 h-fit flex items-center`}>{data.status}</span>
+        <div className="flex flex-col justify-between items-end">
+            <span
+                className={`${getStatusColor(data.status)} w-fit rounded-full px-3 py-1 h-fit flex items-center`}>{data.status}</span>
+
+            <div>
+                <div className="space-x-4">
+                    {data.status === 'submitted' && <Button variant='contained'>Scrutinize</Button>}
+                    {data.file_id &&
+                        <Button onClick={() => downloadFile(data.file_id!)} variant="contained" color="primary"
+                                className="mt-3">Download</Button>}
+                </div>
+            </div>
+        </div>
     </div>
 }

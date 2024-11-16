@@ -1,14 +1,46 @@
 import Button from '@mui/material/Button';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import {StateSetter} from "@/lib/types";
-import Dialog from "@mui/material/Dialog";
+import {StateSetter, TUseNotifications} from "@/lib/types";
 import FacultyNameAutocomplete, {IFaculty} from "@/components/FacultySearch";
 import {TextField} from "@mui/material";
 import apiInstance from "@/lib/api";
 import {useNotifications} from "@toolpad/core";
 import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {ISubject} from "@/components/exams/ExamTabs";
+import DialogBox from "@/components/DialogBox";
+
+function handleSubmission(selectedFaculty: IFaculty | null, notify: TUseNotifications, e: React.FormEvent<HTMLFormElement>, data: TExamQueryOut, subject: ISubject, setSubjects: (value: (((prevState: ISubject[]) => ISubject[]) | ISubject[])) => void, setOpen: (value: (((prevState: boolean) => boolean) | boolean)) => void) {
+    if (!window.confirm('Are you sure you want to assign this faculty?'))
+        return;
+
+    if (!selectedFaculty) {
+        notify.show('Please select a faculty', {severity: 'error', autoHideDuration: 1000});
+        return;
+    }
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const dueDate = formData.get('due_date') as string;
+
+    apiInstance.post('/coordinator/assign-faculty', {
+        f_id: selectedFaculty?.f_id,
+        e_id: data.e_id,
+        clgID: data.clgid,
+        course_id: subject.course_id,
+        scheme: subject.scheme,
+        due_date: new Date(dueDate).toISOString(),
+    }).then((res) => {
+        // Remove the  selected subject from the list
+        setSubjects((prev) => prev.filter((e) => {
+            return e.course_id !== subject.course_id;
+        }));
+
+        notify.show('Faculty assigned successfully', {severity: 'success', autoHideDuration: 1000});
+        console.log(res.data);
+    }).catch(e => {
+        console.error(e);
+    }).finally(() => {
+        setOpen(false);
+    });
+}
 
 export default function AssignFacultyDialog(
     {open, setOpen, setSelectedFaculty, selectedFaculty, data, subject, setSubjects}: {
@@ -31,83 +63,26 @@ export default function AssignFacultyDialog(
         }
     };
 
-
-    const handleCreate = () => {
-        setOpen(false);
-    };
-
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle>Assign Faculty</DialogTitle>
-            <DialogContent className="w-[500px] text-center">
-                <form className="text-left" onSubmit={(e) => {
-                    e.preventDefault();
+        <DialogBox open={open} title="Assign Faculty" howToClose={handleClose}>
+            <form className="text-left" onSubmit={(e) => {
+                e.preventDefault();
 
-                    if (!window.confirm('Are you sure you want to assign this faculty?'))
-                        return;
+                handleSubmission(selectedFaculty, notify, e, data, subject, setSubjects, setOpen);
+            }}>
+                <FacultyNameAutocomplete clgid={data.clgid} setSelectedFaculty={setSelectedFaculty}/>
+                <div className="flex items-center justify-between mt-5">
+                    <label htmlFor="due_date">Due Date <span className="text-red-400">*</span></label>
+                    <TextField type="datetime-local" name="due_date" required/>
+                </div>
 
-                    if (!selectedFaculty) {
-                        notify.show('Please select a faculty', {severity: 'error', autoHideDuration: 1000});
-                        return;
-                    }
-
-                    const formData = new FormData(e.target as HTMLFormElement);
-                    const dueDate = formData.get('due_date') as string;
-
-                    apiInstance.post('/coordinator/assign-faculty', {
-                        f_id: selectedFaculty?.f_id,
-                        e_id: data.e_id,
-                        clgID: data.clgid,
-                        course_id: subject.course_id,
-                        scheme: subject.scheme,
-                        due_date: new Date(dueDate).toISOString(),
-                    }).then((res) => {
-                        // Remove the  selected subject from the list
-                        setSubjects((prev) => prev.filter((e) => {
-                            return e.course_id !== subject.course_id;
-                        }));
-
-                        notify.show('Faculty assigned successfully', {severity: 'success', autoHideDuration: 1000});
-                        console.log(res.data);
-                    }).catch(e => {
-                        console.error(e);
-                    }).finally(() => {
-                        handleCreate();
-                    });
-                }}>
-                    <FacultyNameAutocomplete setSelectedFaculty={setSelectedFaculty}/>
-                    <div className="flex items-center justify-between mt-5">
-                        <label htmlFor="due_date">Due Date <span className="text-red-400">*</span></label>
-                        <TextField type="datetime-local" name="due_date" required/>
-                    </div>
-
-                    <div className='mt-8 flex justify-end gap-2'>
-                        <Button onClick={handleClose}>Close</Button>
-                        <Button type="submit" autoFocus variant="contained">
-                            Assign
-                        </Button>
-                    </div>
-                </form>
-            </DialogContent>
-        </Dialog>
+                <div className='mt-8 flex justify-end gap-2'>
+                    <Button onClick={handleClose}>Close</Button>
+                    <Button type="submit" autoFocus variant="contained">
+                        Assign
+                    </Button>
+                </div>
+            </form>
+        </DialogBox>
     )
 }
-/*
-    f_id           VARCHAR(10),
-    e_id           INT                           NOT NULL,
-    clgID          varchar(10)                   NOT NULL,
-    course_id      varchar(10)                   NOT NULL,
-    scheme         INT                           NOT NULL,
-
-    status         StatusTypes DEFAULT 'pending' NOT NULL,
-    due_date       DATE                          NOT NULL,
-    submitted_date DATE,
-
-    file_id        INT,
-    created_date   timestamp   DEFAULT CURRENT_TIMESTAMP,
- */
