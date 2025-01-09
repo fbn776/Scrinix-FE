@@ -1,5 +1,29 @@
 # Scrinix Frontend
 
+The frontend of Scrinix is designed to provide an intuitive and user-friendly interface for exam coordinators and faculty members. 
+It facilitates seamless interaction with the backend services, ensuring efficient workflows for exam management and moderation.
+
+## Backend
+
+See the backend repo [here](https://github.com/fbn776/Scrinix-BE)
+
+## Tech Stack
+
+- Nextjs
+- Typescript
+- Tailwindcss
+- MaterialUI
+
+## Screenshots
+
+| **Coordinator Dashboard** | **Exam Overview** | **Exam Question Paper** |
+|----------------------------|-------------------|--------------------------|
+| ![Coordinator Dashboard](./assets/coordinator.png) | ![Exam Overview](./assets/exam.png) | ![Exam Question Paper](./assets/exam_qp.png) |
+
+| **Upload Question Paper** | **Login Screen** |
+|---------------------------|------------------|
+| ![Upload Question Paper](./assets/exam_upload.png) | ![Login Screen](./assets/login.png) |
+
 ## Usage
 
 ## Development
