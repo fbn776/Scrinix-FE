@@ -31,7 +31,7 @@ function CourseUnit(props: {
 
             apiInstance.delete(`/course/delete-course/${props.courses.course_id}/${props.courses.scheme}`).then(() => {
                 props.notify.show('Course deleted successfully', {
-                    severity: 'success'
+                    severity: 'success', autoHideDuration: 1000
                 });
                 props.setCourses((prev) => {
                     return prev.filter((course) => {
@@ -41,7 +41,7 @@ function CourseUnit(props: {
             }).catch(e => {
                 console.error(e);
                 props.notify.show('Cannot delete course', {
-                    severity: 'error'
+                    severity: 'error', autoHideDuration: 1000
                 });
             }).finally(() => {
                 setLoading(false);

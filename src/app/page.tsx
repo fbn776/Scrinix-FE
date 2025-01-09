@@ -10,15 +10,22 @@ export default function Home() {
         <ul className="pl-5 space-y-4">
             <li className='flex gap-2 items-center'>
                 Coordinator
-                <Button variant="contained" component={Link} href="/main/coordinator">
+                <Button variant="contained" component={Link} href="/auth/coordinator">
                     Go to coordinator
                 </Button>
             </li>
 
             <li className='flex gap-2 items-center'>
                 Root Admin
-                <Button variant="contained" component={Link} href="/admin">
+                <Button variant="contained" component={Link} href="/auth/admin">
                     Go to Root Admin
+                </Button>
+            </li>
+
+            <li className='flex gap-2 items-center'>
+                Faculty
+                <Button variant="contained" component={Link} href="/main/auth/faculty">
+                    Go to faculty
                 </Button>
             </li>
         </ul>

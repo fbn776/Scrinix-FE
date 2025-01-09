@@ -1,15 +1,13 @@
 import {useState} from 'react';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import {Autocomplete, FormControl, FormLabel, TextField} from "@mui/material";
 import {StateSetter} from "@/lib/types";
 import {FileUploadButton} from "@/components/FileUploadButton";
 import {useNotifications} from "@toolpad/core";
 import apiInstance from "@/lib/api";
 import {SEMS_LIST} from "@/data/SEMS_LIST";
-import {TExamQueryOut} from "@/app/main/coordinator/page";
+import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
+import DialogBox from "@/components/DialogBox";
 
 function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, setExam: StateSetter<TExamQueryOut[]> }) {
     const [title, setTitle] = useState('');
@@ -39,22 +37,35 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
         if (Object.values(newErrors).some(error => error)) {
             notifications.show('Fill in the necessary fields', {
                 severity: "error",
-                autoHideDuration: 3000,
+                autoHideDuration: 1000,
             });
             return;
         }
 
-        apiInstance.post("/coordinator/exam", {
-            clgID: 'KTE',
-            title,
-            start_date: startDate,
-            end_date: endDate,
-            sem_scheme: semesters,
+        const formData = new FormData();
+        formData.append('clgID', 'KTE');
+        formData.append('title', title);
+        formData.append('start_date', startDate);
+        formData.append('end_date', endDate);
+        /**
+         * Since we are sending the data to backend as a FormData, we can't send it directly as an array.
+         * So joining it using # and then the backend splits it back to an array
+         */
+        formData.append('sem_scheme', semesters.join('#'));
+        if (timeTable) formData.append('timetable', timeTable);
+        if (seatingArrangement) formData.append('seating', seatingArrangement);
+
+        console.log(formData.get('clgID'));
+
+        apiInstance.post("/coordinator/exam", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         }).then((res) => {
 
             notifications.show('Exam created successfully', {
                 severity: "success",
-                autoHideDuration: 3000,
+                autoHideDuration: 1000,
             });
 
             const sem_scheme = res.data.data.sem_scheme
@@ -79,11 +90,10 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
             // TODO Better error handling
             notifications.show('Cannot create exam, an error happened', {
                 severity: "error",
-                autoHideDuration: 3000,
+                autoHideDuration: 1000,
             });
         });
     };
-
 
     return <form onSubmit={(e) => {
         e.preventDefault();
@@ -116,7 +126,7 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
                     return {label: item}
                 })}
 
-                onChange={(event, newValue) => {
+                onChange={(_, newValue) => {
                     setSemesters(newValue.map(item => item.label))
                 }}
             />
@@ -145,12 +155,12 @@ function CreateExamForm({setOpen, setExam}: { setOpen: StateSetter<boolean>, set
 
             <div className="flex items-center justify-between">
                 <FormLabel>Time Table</FormLabel>
-                <FileUploadButton file={timeTable} setFile={setTimeTable}/>
+                <FileUploadButton file={timeTable} setFile={setTimeTable} fileType='.pdf'/>
             </div>
 
             <div className="flex items-center justify-between">
                 <FormLabel>Seating Arrangement</FormLabel>
-                <FileUploadButton file={seatingArrangement} setFile={setSeatingArrangement}/>
+                <FileUploadButton file={seatingArrangement} setFile={setSeatingArrangement} fileType='.pdf'/>
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
@@ -175,16 +185,8 @@ export default function CreateExamModal({open, setOpen, setExam}: {
     };
 
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle>Create Exam</DialogTitle>
-            <DialogContent className="w-[500px] text-center">
-                <CreateExamForm setOpen={setOpen} setExam={setExam}/>
-            </DialogContent>
-        </Dialog>
-    );
+        <DialogBox open={open} title="Create Exam" howToClose={handleClose}>
+            <CreateExamForm setOpen={setOpen} setExam={setExam}/>
+        </DialogBox>
+    )
 }

@@ -34,7 +34,7 @@ function AdminUnit(props: {
 
             apiInstance.delete(`/admin/root/delete-admin/${props.admin.clgid}/${props.admin.username}`).then(() => {
                 props.notify.show('Admin deleted successfully', {
-                    severity: 'success'
+                    severity: 'success', autoHideDuration: 1000
                 });
                 props.setAdmins((prev) => {
                     return prev.filter((admin) => {
@@ -44,7 +44,7 @@ function AdminUnit(props: {
             }).catch(e => {
                 console.error(e);
                 props.notify.show('Cannot delete admin', {
-                    severity: 'error'
+                    severity: 'error', autoHideDuration: 1000
                 });
             }).finally(() => {
                 setLoading(false);

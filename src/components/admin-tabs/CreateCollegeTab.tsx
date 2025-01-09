@@ -23,12 +23,12 @@ export default function CreateCollegeTab() {
                 console.log(res.data);
                 notifications.show('College created successfully', {
                     severity: "success",
-                    autoHideDuration: 3000,
+                    autoHideDuration: 1000,
                 });
             }).catch((err) => {
                 console.error(err)
                 notifications.show('Cannot create college, already exists', {
-                    autoHideDuration: 3000,
+                    autoHideDuration: 1000,
                     severity: "error"
                 });
             }).finally(() => {

@@ -7,6 +7,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import {usePathname} from "next/navigation";
 import AccountMenu from "@/components/AccountMenu";
 import Tooltip from "@mui/material/Tooltip";
+import {NotificationsProvider} from "@toolpad/core";
 
 function BasicSimpleTreeView() {
     return (
@@ -30,30 +31,33 @@ export default function MainLayout(props: Readonly<{ children: React.ReactNode; 
     const currentPageName = usePathname().split('/').pop();
     const {children} = props;
     return (
-        <main className="flex w-full h-full">
-            <nav className="w-[20%] bg-secondary h-full shadow text-white">
-                <h1 className="text-3xl text-center my-5">SCRUTINIX</h1>
-                <BasicSimpleTreeView/>
-            </nav>
-            <main className="flex flex-col flex-1 h-full overflow-hidden">
-                <nav className="w-full h-[100px] min-h-[100px] bg-primary shadow flex items-center justify-between px-5 gap-10">
-                    <h1 className='font-semibold text-3xl text-white capitalize'>{currentPageName ? currentPageName : "Home"}</h1>
-                    <div className="flex gap-10">
-                        <Tooltip title="Notifications" placement="bottom">
-                            <Button>
-                                <Badge badgeContent={5} max={9} color="primary">
-                                    <NotificationsIcon sx={{fontSize: "32px"}} className="text-white"/>
-                                </Badge>
-                            </Button>
-                        </Tooltip>
-                        <AccountMenu/>
-                    </div>
+        <NotificationsProvider>
+            <main className="flex w-full h-full">
+                <nav className="w-[20%] bg-secondary h-full shadow-2xl text-white">
+                    <h1 className="text-3xl text-center my-5">SCRUTINIX</h1>
+                    <BasicSimpleTreeView/>
                 </nav>
-                <main className="size-full outline-red-400 overflow-y-scroll">
-                    {children}
-                </main>
+                <section className="flex flex-col flex-1 h-full overflow-hidden">
+                    <nav
+                        className="shadow-2xl w-full h-[100px] min-h-[100px] bg-primary flex items-center justify-between px-5 gap-10">
+                        <h1 className='font-semibold text-3xl text-white capitalize'>{currentPageName ? currentPageName : "Home"}</h1>
+                        <div className="flex gap-10">
+                            <Tooltip title="Notifications" placement="bottom">
+                                <Button>
+                                    <Badge badgeContent={5} max={9} color="primary">
+                                        <NotificationsIcon sx={{fontSize: "32px"}} className="text-white"/>
+                                    </Badge>
+                                </Button>
+                            </Tooltip>
+                            <AccountMenu/>
+                        </div>
+                    </nav>
+                    <main className="size-full overflow-y-auto">
+                        {children}
+                    </main>
+                </section>
             </main>
-        </main>
+        </NotificationsProvider>
     );
 
 }
