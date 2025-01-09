@@ -3,6 +3,8 @@
 The frontend of Scrinix is designed to provide an intuitive and user-friendly interface for exam coordinators and faculty members. 
 It facilitates seamless interaction with the backend services, ensuring efficient workflows for exam management and moderation.
 
+> **Note**: The application is not completed. Feel free to contribute or fork this project.
+
 ## Backend
 
 See the backend repo [here](https://github.com/fbn776/Scrinix-BE)
