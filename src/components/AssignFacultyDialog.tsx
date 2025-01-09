@@ -2,7 +2,6 @@ import Button from '@mui/material/Button';
 import {StateSetter} from "@/lib/types";
 import FacultyNameAutocomplete, {IFaculty} from "@/components/FacultySearch";
 import {TextField} from "@mui/material";
-import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import DialogBox from "@/components/DialogBox";
 import {FormEvent} from "react";
 

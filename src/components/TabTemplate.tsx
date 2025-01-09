@@ -11,7 +11,12 @@ export interface ITabTemplate {
     tab: React.ReactElement,
     title: string | number
 }
-export default function TabTemplate({tabData, children}: { tabData: ITabTemplate[], children?: React.ReactNode }) {
+
+export default function TabTemplate({tabData, children, loading}: {
+    loading: boolean,
+    tabData: ITabTemplate[],
+    children?: React.ReactNode
+}) {
     const [tabIndex, setTabIndex] = useState(0);
 
     const handleChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -34,11 +39,15 @@ export default function TabTemplate({tabData, children}: { tabData: ITabTemplate
                 </Tabs>
             </Box>
             <Box className="flex-1 overflow-auto w-full">
-                {tabData.map((tab, i) => {
-                    return <CustomTabPanel key={i} value={tabIndex} index={i} padding='0px'>
-                        {tab.tab}
-                    </CustomTabPanel>
-                })}
+                {loading ? <div>
+                        Loading...
+                    </div> :
+                    tabData.map((tab, i) => {
+                        return <CustomTabPanel key={i} value={tabIndex} index={i} padding='0px'>
+                            {tab.tab}
+                        </CustomTabPanel>
+                    })
+                }
             </Box>
         </Box>
     );

@@ -1,6 +1,5 @@
 "use client";
 
-import Box from '@mui/material/Box';
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
@@ -13,7 +12,7 @@ import apiInstance from "@/lib/api";
 import {useRouter} from "next/navigation";
 import AvailableSubjectsTab from "@/components/exams/tabs/AvailableSubjectsTab";
 import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
-import QuestionPaperTab from "@/components/exams/tabs/qp/QuestionPaperTab";
+import QuestionPaperTab, {IQuestionPaper} from "@/components/exams/tabs/qp/QuestionPaperTab";
 import ExamUploadTab from "@/components/exams/tabs/ExamUploadTab";
 import TabTemplate from "@/components/TabTemplate";
 import ScrutinizeView from "@/components/exams/ScrutinizeView";
@@ -28,37 +27,61 @@ export interface ISubject {
     time_table: number | null;
 }
 
-
 export default function ExamTabs({paramData}: { paramData: TExamQueryOut }) {
-    const [subjects, setSubjects] = useState<ISubject[]>([]);
+    const [availSubjects, setAvailSubjects] = useState<ISubject[]>([]);
     const [data, setData] = useState<TExamQueryOut>(paramData);
-    const [qpCount, setQpCount] = useState(0);
+    const [qpArr, setQpArr] = useState<IQuestionPaper[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
 
     useEffect(() => {
+        let isAvilFinished = false;
+        let isQpFinished = false;
+
+        setIsLoading(true);
+
         apiInstance.post('/exams/get-available-subjects', {
             e_id: data.e_id,
             clg_id: data.clgid
         }).then((res) => {
-            setSubjects(res.data.data);
+            setAvailSubjects(res.data.data);
         }).catch((e) => {
             console.error(e);
             return router.push('/main/exam/error');
-        })
+        }).finally(() => {
+            isAvilFinished = true;
+            if(isQpFinished) {
+                setIsLoading(false);
+            }
+        });
+
+        apiInstance.post('/exams/get-qp', {
+            e_id: data.e_id,
+            clgid: data.clgid
+        }).then((res) => {
+            setQpArr(res.data.data);
+        }).catch((e) => {
+            console.error(e);
+        }).finally(() => {
+            isQpFinished = true;
+            if(isAvilFinished) {
+                setIsLoading(false);
+            }
+        });
     }, [data, router]);
 
     if (!data)
-        return null;
+        return <div>Data not found</div>;
 
-    return <TabTemplate tabData={[
+    return <TabTemplate loading={isLoading} tabData={[
         {
-            tab: <AvailableSubjectsTab data={data} subject={subjects} setSubjects={setSubjects}/>,
-            title: `Available Subjects (${subjects.length})`
+            tab: <AvailableSubjectsTab data={data} subject={availSubjects} setSubjects={setAvailSubjects} setQpArr={setQpArr}/>,
+            title: `Available Subjects (${availSubjects.length})`
         },
         {
-            tab: <QuestionPaperTab data={data} setCount={setQpCount}/>,
-            title: `Question Papers (${qpCount})`
+            tab: <QuestionPaperTab data={data} qpArr={qpArr} setQpArr={setQpArr}/>,
+            title: `Question Papers (${qpArr.length})`
         },
         {
             tab: <ScrutinizeView/>,

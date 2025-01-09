@@ -1,7 +1,4 @@
 import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
-import {useEffect, useState} from "react";
-import {CircularProgress} from "@mui/material";
-import apiInstance from "@/lib/api";
 import QpUnitView from "@/components/exams/tabs/qp/QpUnitView";
 import {StateSetter} from "@/lib/types";
 
@@ -27,38 +24,21 @@ export interface IQuestionPaper {
     status: 'pending' | 'success' | 'under scrutiny' | 'scrutinized' | 'submitted'
 }
 
-export default function QuestionPaperTab({data}: {
+export default function QuestionPaperTab({data, qpArr, setQpArr}: {
     data: TExamQueryOut,
-    setCount: StateSetter<number>
+    qpArr: IQuestionPaper[],
+    setQpArr: StateSetter<IQuestionPaper[]>
 }) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [qpArr, setQpArr] = useState<IQuestionPaper[]>([]);
-
-    useEffect(() => {
-        setIsLoading(true);
-        apiInstance.post('/exams/get-qp', {
-            e_id: data.e_id,
-            clgid: data.clgid
-        }).then((res) => {
-            setQpArr(res.data.data);
-        }).catch((e) => {
-            console.error(e);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, [data.clgid, data.e_id]);
-
+    console.log(qpArr);
 
     return <>
-        {isLoading ?
-            <h1 className="text-center p-5"><CircularProgress/></h1> :
-            qpArr.length === 0 ?
-                <h1 className="text-2xl pt-20 text-center opacity-50">No question paper assigned :(</h1> :
-                <div className="space-y-3 mx-4 my-4">
-                    {qpArr.map((item: IQuestionPaper, i: number) => {
-                        return <QpUnitView key={i} data={item}/>
-                    })}
-                </div>
+        {qpArr.length === 0 ?
+            <h1 className="text-2xl pt-20 text-center opacity-50">No question paper assigned :(</h1> :
+            <div className="space-y-3 mx-4 my-4">
+                {qpArr.map((item: IQuestionPaper, i: number) => {
+                    return <QpUnitView key={i} data={item} setQpArr={setQpArr}/>
+                })}
+            </div>
         }
     </>
 

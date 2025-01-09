@@ -13,6 +13,7 @@ import {useState} from "react";
 import {IFaculty} from "@/components/FacultySearch";
 import apiInstance from "@/lib/api";
 import {useNotifications} from "@toolpad/core";
+import {StateSetter} from "@/lib/types";
 
 const getStatusColor = (status: IQuestionPaper["status"]) => {
     switch (status) {
@@ -31,7 +32,7 @@ const getStatusColor = (status: IQuestionPaper["status"]) => {
     }
 }
 
-export default function QpUnitView({data}: { data: IQuestionPaper }) {
+export default function QpUnitView({data, setQpArr}: { data: IQuestionPaper, setQpArr: StateSetter<IQuestionPaper[]> }) {
     const [open, setOpen] = useState(false);
     const [selectFaculty, setSelectFaculty] = useState<IFaculty | null>(null);
     const notify = useNotifications();
@@ -114,10 +115,10 @@ export default function QpUnitView({data}: { data: IQuestionPaper }) {
             onSubmit={(e) => {
                 setLoading(true);
 
-                console.log(selectFaculty);
-
                 const formData = new FormData(e.target as HTMLFormElement);
                 const dueDate = formData.get('due_date') as string;
+
+                console.log(data);
 
                 apiInstance.post('/coordinator/scrutiny/assign-faculty', {
                     f_id: selectFaculty?.f_id,
@@ -130,6 +131,7 @@ export default function QpUnitView({data}: { data: IQuestionPaper }) {
                     console.log(res.data);
                     notify.show('Faculty assigned successfully', {severity: 'success', autoHideDuration: 1000});
                     setOpen(false);
+                    setQpArr((prev) => prev.filter((e) => e.course_id !== data.course_id));
                 }).catch(e => {
                     console.error(e);
                     notify.show('Error assigning faculty', {severity: 'error', autoHideDuration: 1000});

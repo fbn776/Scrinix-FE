@@ -10,8 +10,18 @@ import {TExamQueryOut} from "@/app/main/[clgid]/coordinator/page";
 import {StateSetter, TUseNotifications} from "@/lib/types";
 import apiInstance from "@/lib/api";
 import {useNotifications} from "@toolpad/core";
+import {IQuestionPaper} from "@/components/exams/tabs/qp/QuestionPaperTab";
 
-function handleSubmission(selectedFaculty: IFaculty | null, notify: TUseNotifications, e: React.FormEvent<HTMLFormElement>, data: TExamQueryOut, subject: ISubject, setSubjects: (value: (((prevState: ISubject[]) => ISubject[]) | ISubject[])) => void, setOpen: (value: (((prevState: boolean) => boolean) | boolean)) => void) {
+function handleSubmission(
+    selectedFaculty: IFaculty | null,
+    notify: TUseNotifications,
+    e: React.FormEvent<HTMLFormElement>,
+    data: TExamQueryOut,
+    subject: ISubject,
+    setSubjects: StateSetter<ISubject[]>,
+    setOpen:StateSetter<boolean>,
+    setQpArr: StateSetter<IQuestionPaper[]>
+) {
     if (!window.confirm('Are you sure you want to assign this faculty?'))
         return;
 
@@ -36,6 +46,9 @@ function handleSubmission(selectedFaculty: IFaculty | null, notify: TUseNotifica
             return e.course_id !== subject.course_id;
         }));
 
+        // console.log("Response: ", res.data.data);
+        setQpArr((prev) => [...prev, res.data.data]);
+
         notify.show('Faculty assigned successfully', {severity: 'success', autoHideDuration: 1000});
         console.log(res.data);
     }).catch(e => {
@@ -49,7 +62,8 @@ function handleSubmission(selectedFaculty: IFaculty | null, notify: TUseNotifica
 export function SubjectView(props: {
     data: TExamQueryOut,
     item: ISubject,
-    setSubjects: StateSetter<ISubject[]>
+    setSubjects: StateSetter<ISubject[]>,
+    setQpArr: StateSetter<IQuestionPaper[]>
 }) {
     const [open, setOpen] = useState(false);
     const [selectFaculty, setSelectFaculty] = useState<IFaculty | null>(null);
@@ -69,7 +83,7 @@ export function SubjectView(props: {
             setSelectedFaculty={setSelectFaculty}
 
             onSubmit={(e) => {
-                handleSubmission(selectFaculty, notify, e, props.data, props.item, props.setSubjects, setOpen);
+                handleSubmission(selectFaculty, notify, e, props.data, props.item, props.setSubjects, setOpen, props.setQpArr);
             }}
         />
     </div>;
